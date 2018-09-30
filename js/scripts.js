@@ -28,27 +28,24 @@ searchContainer.appendChild(searchForm);
 GALLERY
 ------------------------------------------------------------------------------------------------------------------------- */
 // Send request to Random User Generator API
-fetch('https://randomuser.me/api/')
+fetch('https://randomuser.me/api/?nat=us&results=12')
     .then(response => response.json())
     .then(data => cardInfo(data.results))
 
-    
-// Create gallery html
-const gallery = document.getElementById('gallery');
-const card = document.createElement('div');
-card.className = 'card';
-gallery.appendChild(card);
-
 // Create person card components from API
 function cardInfo(data) {
+    let cardHTML = '';
     data.forEach(person => {
-        const personImg =  person.picture.medium;
+        const gallery = document.getElementById('gallery');
+        const personImg =  person.picture.large;
         const personFirstName =  person.name.first;
         const personLastName =  person.name.last;
         const personEmail =  person.email;
         const personCity =  person.location.city;
-        const personState =  person.location.state;
-        const cardHTML = `
+        const personState =  person.location.state;;
+        // Insert API variables into HTML
+        cardHTML += `
+        <div class="card">
             <div class="card-img-container">
                 <img class="card-img" src="${personImg}" alt="profile picture">
             </div>
@@ -57,7 +54,8 @@ function cardInfo(data) {
                 <p class="card-text">${personEmail}</p>
                 <p class="card-text cap">${personCity}, ${personState}</p>
             </div>
+        </div>
         `;
-        card.innerHTML = cardHTML;
+        gallery.innerHTML = cardHTML;
     });
 }
