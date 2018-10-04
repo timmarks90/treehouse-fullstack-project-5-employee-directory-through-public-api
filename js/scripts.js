@@ -98,5 +98,3 @@ const modal = () => {
     `;
     modalContainer.innerHTML = modalHTML;
 }
-
-/* Next section */
