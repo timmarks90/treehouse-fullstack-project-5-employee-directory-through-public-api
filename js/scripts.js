@@ -7,6 +7,12 @@ const searchForm = document.createElement('form');
 searchForm.setAttribute('method', 'get');
 searchForm.setAttribute('action', '#');
 
+// Gallery
+const gallery = document.getElementById('gallery');
+
+// Create modal container
+let modalContainer = document.createElement('div');
+
 // Create search inputs
 const searchInput = document.createElement('input');
 searchInput.setAttribute('type', 'search');
@@ -36,7 +42,6 @@ fetch('https://randomuser.me/api/?nat=us&results=12')
 function cardInfo(data) {
     let cardHTML = '';
     data.forEach(person => {
-        const gallery = document.getElementById('gallery');
         const personImg =  person.picture.large;
         const personFirstName =  person.name.first;
         const personLastName =  person.name.last;
@@ -58,12 +63,13 @@ function cardInfo(data) {
         `;
     });
     gallery.innerHTML = cardHTML;
-
     // Create modal on click of employee card
     const card = document.querySelectorAll('.card');
     for(i = 0; i < card.length; i++) {
         card[i].addEventListener('click', () => {
+            modalContainer.style.display = "block";
             modal();
+            console.log('works');
         })
     }
 }
@@ -71,16 +77,16 @@ function cardInfo(data) {
 /* ----------------------------------------------------------------------------------------------------------------------
 Modal
 ------------------------------------------------------------------------------------------------------------------------- */
-const modal = () => {
-    modalContainer = document.createElement('div').className = 'modal-container';    
-    const modalHTML = `
+const modal = (data) => {
+    // Insert API variables into HTML
+    let modalHTML = `
         <div class="modal-container">
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                 <div class="modal-info-container">
                     <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
                     <h3 id="name" class="modal-name cap">name</h3>
-                    <p class="modal-text">email</p>
+                    <p class="modal-text">${personEmail}</p>
                     <p class="modal-text cap">city</p>
                     <hr>
                     <p class="modal-text">(555) 555-5555</p>
@@ -96,5 +102,12 @@ const modal = () => {
             </div>
         </div>
     `;
+    });
     modalContainer.innerHTML = modalHTML;
+    gallery.parentNode.insertBefore(modalContainer, gallery);
+    // Close modal on click of 'X' close button
+    const modalClose = document.getElementById('modal-close-btn');
+    modalClose.addEventListener('click', () => {
+        modalContainer.style.display = "none";
+    })
 }
