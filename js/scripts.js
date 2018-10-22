@@ -47,7 +47,13 @@ function cardInfo(data) {
         const personLastName =  person.name.last;
         const personEmail =  person.email;
         const personCity =  person.location.city;
-        const personState =  person.location.state;;
+        const personState =  person.location.state;
+        const cellPhone =  person.cell;
+        const homePhone =  person.phone;
+        const address = person.location.street;
+        const postcode = person.location.postcode;
+        const birthday = person.dob;
+        
         // Insert API variables into HTML
         cardHTML += `
         <div class="card">
@@ -66,32 +72,33 @@ function cardInfo(data) {
     // Create modal on click of employee card
     const card = document.querySelectorAll('.card');
     for(i = 0; i < card.length; i++) {
+        const currentCard = (card[i].closest('.card'))
         card[i].addEventListener('click', () => {
             modalContainer.style.display = "block";
-            modal(this);
+            modal(currentCard);
             console.log('works');
         })
     }
 }
 
-
 /* ----------------------------------------------------------------------------------------------------------------------
 Modal
 ------------------------------------------------------------------------------------------------------------------------- */
-const modal = (e) => {
+const modal = (card) => {
     // Grab person card info
-    const cardName = document.querySelector('.card-name').textContent;
-    const cardImg = document.querySelector('.card-img').textContent;
-    const cardEmail = document.querySelector('.card-text').textContent;
+    const cardName = card.querySelector('.card-name').textContent;
+    const cardImg = card.querySelector('.card-img').src;
+    const cardEmail = card.querySelector('.card-text').textContent;
+    const cardLocation = card.querySelector('.card-text.cap').textContent;
     const modalHTML = `
         <div class="modal-container">
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                 <div class="modal-info-container">
-                    <img class="modal-img" src="${e.cardImg}" alt="profile picture">
-                    <h3 id="name" class="modal-name cap">${e.cardName}</h3>
-                    <p class="modal-text">${e.cardEmail}</p>
-                    <p class="modal-text cap">city</p>
+                    <img class="modal-img" src="${cardImg}" alt="profile picture">
+                    <h3 id="name" class="modal-name cap">${cardName}</h3>
+                    <p class="modal-text">${cardEmail}</p>
+                    <p class="modal-text cap">${cardLocation}</p>
                     <hr>
                     <p class="modal-text">(555) 555-5555</p>
                     <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
@@ -114,4 +121,13 @@ const modal = (e) => {
     modalClose.addEventListener('click', () => {
         modalContainer.style.display = "none";
     })
+
+    // Close modal by clicking Escape key
+    if(modalContainer.style.display = "block") {
+        window.onkeydown = function(e) {
+            if ( e.keyCode == 27 ) {
+                modalContainer.style.display = "none";
+            }
+        };
+    }
 }
