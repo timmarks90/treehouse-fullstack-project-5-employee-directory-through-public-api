@@ -36,6 +36,9 @@ function cardInfo(data) {
         const postcode = person.location.postcode;
         let birthday = person.dob.date;
         birthday = birthday.substring(0, birthday.indexOf('T'));
+        const address = person.location.street;
+        const postcode = person.location.postcode;
+        const birthday = person.dob;
         
         // Insert API variables into HTML
         cardHTML += `
