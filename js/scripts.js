@@ -1,4 +1,3 @@
-
 // Add search container
 const searchContainer = document.querySelector('.search-container');
 
@@ -12,23 +11,6 @@ const gallery = document.getElementById('gallery');
 
 // Create modal container
 let modalContainer = document.createElement('div');
-
-// Create search inputs
-const searchInput = document.createElement('input');
-searchInput.setAttribute('type', 'search');
-searchInput.setAttribute('id', 'search-input');
-searchInput.setAttribute('class', 'search-input');
-searchInput.placeholder = "Search...";
-
-const submitInput = document.createElement('input');
-searchInput.setAttribute('type', 'submit');
-searchInput.setAttribute('value', '&#x1F50D;');
-searchInput.setAttribute('id', 'search-submit');
-searchInput.setAttribute('class', 'search-submit');
-
-searchForm.appendChild(searchInput);
-searchForm.appendChild(submitInput);
-searchContainer.appendChild(searchForm);
 
 /* ----------------------------------------------------------------------------------------------------------------------
 GALLERY
@@ -50,6 +32,10 @@ function cardInfo(data) {
         const personState =  person.location.state;
         const cellPhone =  person.cell;
         const homePhone =  person.phone;
+        const streetAddress = person.location.street;
+        const postcode = person.location.postcode;
+        let birthday = person.dob.date;
+        birthday = birthday.substring(0, birthday.indexOf('T'));
         const address = person.location.street;
         const postcode = person.location.postcode;
         const birthday = person.dob;
@@ -64,11 +50,17 @@ function cardInfo(data) {
                 <h3 id="name" class="card-name cap">${personFirstName} ${personLastName}</h3>
                 <p class="card-text">${personEmail}</p>
                 <p class="card-text cap">${personCity}, ${personState}</p>
+                <p class="modal-text cell">${cellPhone}</p>
+                <p class="modal-text homePhone">${homePhone}</p>
+                <p class="modal-text streetAddress">${streetAddress}</p>
+                <p class="modal-text postcode">${postcode}</p>
+                <p class="modal-text birthday">${birthday}</p>
             </div>
         </div>
         `;
     });
     gallery.innerHTML = cardHTML;
+
     // Create modal on click of employee card
     const card = document.querySelectorAll('.card');
     for(i = 0; i < card.length; i++) {
@@ -78,6 +70,11 @@ function cardInfo(data) {
             modal(currentCard);
             console.log('works');
         })
+    }
+    // Hide HMTL values specific to modal popup by default
+    const modalText = document.querySelectorAll('.modal-text');
+    for (let i = 0; i < modalText.length; i++) {
+        modalText[i].style.display = "none";
     }
 }
 
@@ -90,6 +87,10 @@ const modal = (card) => {
     const cardImg = card.querySelector('.card-img').src;
     const cardEmail = card.querySelector('.card-text').textContent;
     const cardLocation = card.querySelector('.card-text.cap').textContent;
+    const cellModal = card.querySelector('.modal-text.cell').textContent;
+    const streetAddressModal = card.querySelector('.modal-text.streetAddress').textContent;
+    const postcodeModal = card.querySelector('.modal-text.postcode').textContent;
+    const birthdayModal = card.querySelector('.modal-text.birthday').textContent;
     const modalHTML = `
         <div class="modal-container">
             <div class="modal">
@@ -100,9 +101,9 @@ const modal = (card) => {
                     <p class="modal-text">${cardEmail}</p>
                     <p class="modal-text cap">${cardLocation}</p>
                     <hr>
-                    <p class="modal-text">(555) 555-5555</p>
-                    <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                    <p class="modal-text">Birthday: 10/21/2015</p>
+                    <p class="modal-text">${cellModal}</p>
+                    <p class="modal-text">${streetAddressModal}, ${cardLocation}, ${postcodeModal}</p>
+                    <p class="modal-text">Birthday: ${birthdayModal}</p>
                 </div>
             </div>
         
