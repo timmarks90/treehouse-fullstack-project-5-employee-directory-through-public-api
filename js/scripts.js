@@ -1,34 +1,45 @@
-
 // Add search container
 const searchContainer = document.querySelector('.search-container');
 
 // Create search form
-const searchForm = document.createElement('form');
-searchForm.setAttribute('method', 'get');
-searchForm.setAttribute('action', '#');
+const search = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+`;
+// Add search to html
+searchContainer.innerHTML = search;
+
+const searchInput = document.getElementById('search-input');
+const searchSubmit = document.getElementById('search-submit');
+
+// Filter page people results on click of search submit button
+searchSubmit.addEventListener("click", () => {
+    const searchValue = searchInput.value.toLowerCase();
+    filterSearch(searchValue);
+})
+
+// Filter page people results from search
+function filterSearch(value) {
+    const card = document.querySelectorAll('.card');
+    // loop through all people cards on page
+    for(i = 0; i < card.length; i++) {
+        // Grab person name from card
+        const personName = card[i].querySelector('.card-name').textContent;
+        if (personName.indexOf(value) != -1) {
+            card[i].style.display = "";
+        } else {
+            card[i].style.display = "none";
+        }
+    }
+}
 
 // Gallery
 const gallery = document.getElementById('gallery');
 
 // Create modal container
 let modalContainer = document.createElement('div');
-
-// Create search inputs
-const searchInput = document.createElement('input');
-searchInput.setAttribute('type', 'search');
-searchInput.setAttribute('id', 'search-input');
-searchInput.setAttribute('class', 'search-input');
-searchInput.placeholder = "Search...";
-
-const submitInput = document.createElement('input');
-searchInput.setAttribute('type', 'submit');
-searchInput.setAttribute('value', '&#x1F50D;');
-searchInput.setAttribute('id', 'search-submit');
-searchInput.setAttribute('class', 'search-submit');
-
-searchForm.appendChild(searchInput);
-searchForm.appendChild(submitInput);
-searchContainer.appendChild(searchForm);
 
 /* ----------------------------------------------------------------------------------------------------------------------
 GALLERY
@@ -50,6 +61,10 @@ function cardInfo(data) {
         const personState =  person.location.state;
         const cellPhone =  person.cell;
         const homePhone =  person.phone;
+        const streetAddress = person.location.street;
+        const postcode = person.location.postcode;
+        let birthday = person.dob.date;
+        birthday = birthday.substring(0, birthday.indexOf('T'));
         const address = person.location.street;
         const postcode = person.location.postcode;
         const birthday = person.dob;
@@ -64,11 +79,17 @@ function cardInfo(data) {
                 <h3 id="name" class="card-name cap">${personFirstName} ${personLastName}</h3>
                 <p class="card-text">${personEmail}</p>
                 <p class="card-text cap">${personCity}, ${personState}</p>
+                <p class="modal-text cell">${cellPhone}</p>
+                <p class="modal-text homePhone">${homePhone}</p>
+                <p class="modal-text streetAddress">${streetAddress}</p>
+                <p class="modal-text postcode">${postcode}</p>
+                <p class="modal-text birthday">${birthday}</p>
             </div>
         </div>
         `;
     });
     gallery.innerHTML = cardHTML;
+
     // Create modal on click of employee card
     const card = document.querySelectorAll('.card');
     for(i = 0; i < card.length; i++) {
@@ -76,20 +97,28 @@ function cardInfo(data) {
         card[i].addEventListener('click', () => {
             modalContainer.style.display = "block";
             modal(currentCard);
-            console.log('works');
         })
+    }
+    // Hide HMTL values specific to modal popup by default
+    const modalText = document.querySelectorAll('.modal-text');
+    for (let i = 0; i < modalText.length; i++) {
+        modalText[i].style.display = "none";
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------------------------------------------------
 Modal
-------------------------------------------------------------------------------------------------------------------------- */
+------------------------------------------------------------------------------------------------------------------------ */
 const modal = (card) => {
     // Grab person card info
     const cardName = card.querySelector('.card-name').textContent;
     const cardImg = card.querySelector('.card-img').src;
     const cardEmail = card.querySelector('.card-text').textContent;
     const cardLocation = card.querySelector('.card-text.cap').textContent;
+    const cellModal = card.querySelector('.modal-text.cell').textContent;
+    const streetAddressModal = card.querySelector('.modal-text.streetAddress').textContent;
+    const postcodeModal = card.querySelector('.modal-text.postcode').textContent;
+    const birthdayModal = card.querySelector('.modal-text.birthday').textContent;
     const modalHTML = `
         <div class="modal-container">
             <div class="modal">
@@ -100,9 +129,9 @@ const modal = (card) => {
                     <p class="modal-text">${cardEmail}</p>
                     <p class="modal-text cap">${cardLocation}</p>
                     <hr>
-                    <p class="modal-text">(555) 555-5555</p>
-                    <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                    <p class="modal-text">Birthday: 10/21/2015</p>
+                    <p class="modal-text">${cellModal}</p>
+                    <p class="modal-text">${streetAddressModal}, ${cardLocation}, ${postcodeModal}</p>
+                    <p class="modal-text">Birthday: ${birthdayModal}</p>
                 </div>
             </div>
         
@@ -130,4 +159,34 @@ const modal = (card) => {
             }
         };
     }
+    
+    // Go to previous or next person on click of buttons in modal
+    const modalPersonPrev = document.getElementById('modal-prev');
+    const modalPersonNext = document.getElementById('modal-next');
+
+    modalPersonPrev.addEventListener("click", e => {
+        console.log('back')
+        if(e.indexOf(card) > 0) {
+            console.log('more than 1')
+            let prevPerson = modalPerson[modalPerson.indexOf(card) - 1];
+            modal(prevPerson, modalPerson);
+        } else {
+            let prevPerson = modalPerson[11];
+            modal(prevPerson, modalPerson);
+            console.log('less than 1')
+        }
+    })
+
+    modalPersonNext.addEventListener("click", e => {
+        console.log('next')
+        if(e.indexOf(card) < 12) {
+            console.log('more than 1')
+            let nextPerson = modalPerson[modalPerson.indexOf(card) + 1];
+            modal(nextPerson, modalPerson);
+        } else {
+            let nextPerson = modalPerson[0];
+            modal(nextPerson, modalPerson);
+            console.log('less than 1')
+        }
+    })
 }
