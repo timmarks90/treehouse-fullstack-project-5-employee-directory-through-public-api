@@ -89,13 +89,15 @@ function cardInfo(data) {
 
     // Create modal on click of employee card
     const card = document.querySelectorAll('.card');
-    for(i = 0; i < card.length; i++) {
+    for(let i = 0; i < card.length; i++) {
         const currentCard = (card[i].closest('.card'))
         card[i].addEventListener('click', () => {
-            modalContainer.style.display = "block";
-            modal(currentCard, card);
+            modalContainer.style.display = 'block';
+            let personArray = Array.from(card)
+            modal(currentCard, personArray);
         })
     }
+    
     // Hide HMTL values specific to modal popup by default
     const modalText = document.querySelectorAll('.modal-text');
     for (let i = 0; i < modalText.length; i++) {
@@ -106,7 +108,7 @@ function cardInfo(data) {
 /* ----------------------------------------------------------------------------------------------------------------------
 Modal
 ------------------------------------------------------------------------------------------------------------------------- */
-const modal = (card, button) => {
+const modal = (card, peopleArray) => {
     // Grab person card info
     const cardName = card.querySelector('.card-name').textContent;
     const cardImg = card.querySelector('.card-img').src;
@@ -147,44 +149,68 @@ const modal = (card, button) => {
     modalClose.addEventListener('click', () => {
         modalContainer.style.display = "none";
     })
-
-    // Close modal by clicking Escape key
-    if(modalContainer.style.display = "block") {
-        window.onkeydown = function(e) {
-            if ( e.keyCode == 27 ) {
-                modalContainer.style.display = "none";
-            }
-        };
-    }
     
     // Go to previous or next person on click of buttons in modal
     const modalPersonPrev = document.getElementById('modal-prev');
     const modalPersonNext = document.getElementById('modal-next');
 
-    modalPersonPrev.addEventListener("click", () => {
-        const card = document.querySelectorAll('.card');
-        console.log('back')
-        const personName = card[i].querySelector('.card-name').textContent;
-        if (personName.indexOf(value) != -1){
-            console.log('more than 1')
-            let prevCard = card.previousElementSibling;
-            modal(prevCard);
-        } else {
-            let prevPerson = modalPerson[11];
-            modal(currentCard);
-            console.log('less than 1')
-        }
-    })
+    // Manipulate modal actions via keyboard
+    if(modalContainer.style.display = "block") {
+        window.onkeydown = function(e) {
+            // Close modal by clicking Escape key
+            if (e.keyCode == 27 ) {
+                modalContainer.style.display = "none";
+            }
+            // Go to previous person by clicking left arrow
+            else if (e.keyCode == 37 ) {
+                if(peopleArray.indexOf(card) > 0 ) {
+                    // go to previous person
+                    let prevPerson = peopleArray[peopleArray.indexOf(card) - 1];
+                    modal(prevPerson, peopleArray);
+                  } else {
+                      // if reached the beginning of people list, go to last person
+                    let prevPerson = peopleArray[11];
+                    modal(prevPerson, peopleArray);
+                  }
+            }
+            // Go to next person by clicking right arrow
+            else if (e.keyCode == 39 ) {
+                if(peopleArray.indexOf(card) < 11 ) {
+                    // go to next person
+                    let nextPerson = peopleArray[peopleArray.indexOf(card) + 1];
+                    modal(nextPerson, peopleArray);
+                } else {
+                    // if reached the end of people list, go to first person
+                    let nextPerson = peopleArray[0];
+                    modal(nextPerson, peopleArray);
+                }
+            }
+        };
+    }
 
-    modalPersonNext.addEventListener("click", () => {
-        console.log('next')
-        if(modalPerson.indexOf(card) < 12) {
-            let nextPerson = modalPerson[modalPerson.indexOf(card) + 1];
-            modal(nextPerson, modalPerson);
+    //Event listener for prev button
+    modalPersonPrev.addEventListener('click', () => {
+      if(peopleArray.indexOf(card) > 0 ) {
+        // go to previous person
+        let prevPerson = peopleArray[peopleArray.indexOf(card) - 1];
+        modal(prevPerson, peopleArray);
+      } else {
+          // if reached the beginning of people list, go to last person
+        let prevPerson = peopleArray[11];
+        modal(prevPerson, peopleArray);
+      }
+    });
+
+    //Event listener for next button
+    modalPersonNext.addEventListener('click', () => {
+        if(peopleArray.indexOf(card) < 11 ) {
+            // go to next person
+            let nextPerson = peopleArray[peopleArray.indexOf(card) + 1];
+            modal(nextPerson, peopleArray);
         } else {
-            let nextPerson = modalPerson[0];
-            modal(nextPerson, modalPerson);
-            console.log('less than 1')
+            // if reached the end of people list, go to first person
+            let nextPerson = peopleArray[0];
+            modal(nextPerson, peopleArray);
         }
-    })
+    });
 }
