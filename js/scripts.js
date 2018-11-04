@@ -65,9 +65,6 @@ function cardInfo(data) {
         const postcode = person.location.postcode;
         let birthday = person.dob.date;
         birthday = birthday.substring(0, birthday.indexOf('T'));
-        const address = person.location.street;
-        const postcode = person.location.postcode;
-        const birthday = person.dob;
         
         // Insert API variables into HTML
         cardHTML += `
@@ -106,9 +103,9 @@ function cardInfo(data) {
     }
 }
 
-/* ---------------------------------------------------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------------------------------------------------
 Modal
------------------------------------------------------------------------------------------------------------------------- */
+------------------------------------------------------------------------------------------------------------------------- */
 const modal = (card) => {
     // Grab person card info
     const cardName = card.querySelector('.card-name').textContent;
@@ -177,7 +174,7 @@ const modal = (card) => {
         }
     })
 
-    modalPersonNext.addEventListener("click", e => {
+    modalPersonNext.addEventListener("click", e=> {
         console.log('next')
         if(e.indexOf(card) < 12) {
             console.log('more than 1')
