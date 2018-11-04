@@ -1,2 +1,7 @@
 # Use a Public API to Create an Employee Directory
 Request a JSON object from the API and parse the data so that 12 employees are listed in a grid with their thumbnail image, full name, email, and location. Clicking the employee’s image or name will open a modal window with more detailed information, such as the employee’s birthday and address.
+
+CSS Changes:
+- Reduced border color on person cards
+- Added box shadow to person to cards hover state
+- Reduced background color
