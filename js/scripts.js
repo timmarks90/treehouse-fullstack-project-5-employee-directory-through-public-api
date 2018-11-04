@@ -93,7 +93,7 @@ function cardInfo(data) {
         const currentCard = (card[i].closest('.card'))
         card[i].addEventListener('click', () => {
             modalContainer.style.display = "block";
-            modal(currentCard);
+            modal(currentCard, card);
         })
     }
     // Hide HMTL values specific to modal popup by default
@@ -106,7 +106,7 @@ function cardInfo(data) {
 /* ----------------------------------------------------------------------------------------------------------------------
 Modal
 ------------------------------------------------------------------------------------------------------------------------- */
-const modal = (card) => {
+const modal = (card, button) => {
     // Grab person card info
     const cardName = card.querySelector('.card-name').textContent;
     const cardImg = card.querySelector('.card-img').src;
@@ -161,23 +161,24 @@ const modal = (card) => {
     const modalPersonPrev = document.getElementById('modal-prev');
     const modalPersonNext = document.getElementById('modal-next');
 
-    modalPersonPrev.addEventListener("click", e => {
+    modalPersonPrev.addEventListener("click", () => {
+        const card = document.querySelectorAll('.card');
         console.log('back')
-        if(e.indexOf(card) > 0) {
+        const personName = card[i].querySelector('.card-name').textContent;
+        if (personName.indexOf(value) != -1){
             console.log('more than 1')
-            let prevPerson = modalPerson[modalPerson.indexOf(card) - 1];
-            modal(prevPerson, modalPerson);
+            let prevCard = card.previousElementSibling;
+            modal(prevCard);
         } else {
             let prevPerson = modalPerson[11];
-            modal(prevPerson, modalPerson);
+            modal(currentCard);
             console.log('less than 1')
         }
     })
 
-    modalPersonNext.addEventListener("click", e=> {
+    modalPersonNext.addEventListener("click", () => {
         console.log('next')
-        if(e.indexOf(card) < 12) {
-            console.log('more than 1')
+        if(modalPerson.indexOf(card) < 12) {
             let nextPerson = modalPerson[modalPerson.indexOf(card) + 1];
             modal(nextPerson, modalPerson);
         } else {
