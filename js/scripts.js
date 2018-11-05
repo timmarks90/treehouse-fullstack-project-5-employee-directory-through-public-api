@@ -27,7 +27,7 @@ function filterSearch(value) {
     for(i = 0; i < card.length; i++) {
         // Grab person name from card
         const personName = card[i].querySelector('.card-name').textContent;
-        if (personName.indexOf(value) != -1) {
+        if (personName.indexOf(value) > -1) {
             card[i].style.display = "";
         } else {
             card[i].style.display = "none";
